@@ -8,22 +8,39 @@ run("Properties...", "channels=1 slices=1 frames=25 unit=pixel pixel_width=1 pix
 setFont("SansSerif", 18, " antialiased");
 setColor("yellow");
 run("Colors...", "foreground=yellow background=black selection=yellow");
-
+setFont("SansSerif", 14, " antialiased");
 for (a=0;a<files;a++)
 {
 	num=substring(rois[a], 5, lengthOf(rois[a])-4);
 	roiManager("Open", dir_cell+rois[a]);
 	n=roiManager("count");
-	//setBatchMode(true);
-	for (b=0;b<n;b++)
+	roiManager("Select", 0);
+	run("Colors...", "foreground=red background=black selection=yellow");
+	setColor("red");
+	run("Draw","slices");
+	//run("Measure");
+	//x=getResult("XM");
+	//y=getResult("YM");
+	//selectWindow("Results");run("Close");
+	//drawString(num, x-2, y-3);
+	setBatchMode(true);
+	for (b=1;b<n;b++)
 	{
+		run("Colors...", "foreground=yellow background=black selection=yellow");setColor("yellow");
 		roiManager("Select", b);
 		run("Draw","slices");
-		run("Measure");
-		x=getResult("XM");
-		y=getResult("YM");
-		selectWindow("Results");run("Close");
-		drawString(num, x-2, y-3);
+		//run("Measure");
+		//x=getResult("XM");
+		//y=getResult("YM");
+		//selectWindow("Results");run("Close");
+		//drawString(num, x-2, y-3);
 	}
-	selectWindow("ROI Manager");run("Close");
+	to_delete=newArray(n);
+	for(t=0;t<n;t++) {to_delete[t]=t;}
+	roiManager("Select", to_delete);
+	roiManager("Delete");
+	
 }
+setBatchMode(false);
+selectWindow("ROI Manager");run("Close");
+setSlice(1);
